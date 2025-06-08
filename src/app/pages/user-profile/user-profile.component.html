@@ -1,0 +1,34 @@
+<h2>{{ user.id === 0 ? 'Cadastrar Perfil' : 'Editar Perfil' }}</h2>
+
+<form (ngSubmit)="salvar()" #form="ngForm">
+    <label>Nome</label>
+    <input [(ngModel)]="user.nome" name="nome" required />
+
+    <label>Sobrenome</label>
+    <input [(ngModel)]="user.sobrenome" name="sobrenome" required />
+
+    <label>Email</label>
+    <input [(ngModel)]="user.email" name="email" type="email" required />
+
+    <label>Data de nascimento</label>
+    <input [(ngModel)]="user.dataNascimento" name="dataNascimento" type="date" required />
+
+    <label>Endereço</label>
+    <input [(ngModel)]="user.endereco" name="endereco" required />
+
+    <label>Sobre</label>
+    <textarea [(ngModel)]="user.sobre" name="sobre"></textarea>
+
+    <div>
+        <label for="curriculo">Currículo (PDF):</label>
+        <input type="file" (change)="onFileSelected($event)" accept="application/pdf" />
+        <button (click)="uploadCurriculo(user.id)" [disabled]="!curriculoFile">Enviar Currículo</button>
+
+        <div *ngIf="curriculoPath">
+            <p><strong>Currículo enviado:</strong> {{ curriculoPath }}</p>
+        </div>
+    </div>
+
+
+    <button type="submit">{{ user.id === 0 ? 'Cadastrar' : 'Atualizar' }}</button>
+</form>

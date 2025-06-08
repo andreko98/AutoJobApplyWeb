@@ -1,12 +1,26 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  templateUrl: './app.component.html'
 })
 export class AppComponent {
-  title = 'job-auto-apply';
+  isAuthenticated = false;
+
+  constructor(private router: Router) {
+    // Simples verificação inicial (pode ser JWT, localStorage, etc.)
+    const user = localStorage.getItem('user');
+    this.isAuthenticated = !!user;
+
+    if (!this.isAuthenticated) {
+      this.router.navigate(['/login']);
+    }
+  }
+
+  logout() {
+    localStorage.removeItem('user');
+    this.isAuthenticated = false;
+    this.router.navigate(['/login']);
+  }
 }

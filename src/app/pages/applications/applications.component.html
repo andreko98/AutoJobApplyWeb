@@ -1,0 +1,10 @@
+<h2>Histórico de Candidaturas</h2>
+<div *ngFor="let app of applications" class="card">
+  <h3>{{ app.job.title }}</h3>
+  <p><strong>Empresa:</strong> {{ app.job.company }}</p>
+  <p><strong>Local:</strong> {{ app.job.location }}</p>
+  <p><strong>Data da candidatura:</strong> {{ app.appliedAt | date:'short' }}</p>
+  <p><strong>Status:</strong> {{ app.status }}</p>
+  <p><strong>Mensagem enviada:</strong></p>
+  <blockquote>{{ app.messageSent }}</blockquote>
+</div>

@@ -1,0 +1,16 @@
+<div class="login-container">
+  <h2>Login</h2>
+
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <label for="email">E-mail:</label>
+    <input id="email" type="email" formControlName="email" required />
+    <button type="submit" [disabled]="loginForm.invalid">Entrar</button>
+  </form>
+
+  <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+
+  <hr />
+
+  <p>Não tem conta?</p>
+  <button (click)="irParaCadastro()">Cadastrar-se</button>
+</div>
