@@ -11,10 +11,20 @@ export class JobsComponent implements OnInit {
   constructor(private jobService: JobService, private appService: ApplicationService) {}
 
   ngOnInit() {
+    this.getAllJobs();
+  }
+
+  getAllJobs() {
     this.jobService.getAll().subscribe(data => this.jobs = data);
   }
 
   apply(jobId: number) {
     this.appService.apply(this.userId, jobId).subscribe();
+  }
+
+  onSearchCompleted(total: number) {
+    alert(`Busca concluída! Total de vagas encontradas: ${total}`);
+
+    this.getAllJobs();
   }
 }

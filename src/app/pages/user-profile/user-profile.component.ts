@@ -8,9 +8,12 @@ import { UserService } from '../../services/users/user.service';
 })
 export class UserProfileComponent implements OnInit {
   user: User = this.createEmptyUser();
-  userId = 1; // Simulação de usuário logado
-  curriculoFile: File | null = null;
-  curriculoPath: string = '';
+  userId = 1;
+  file: File | null = null;
+  path: string = '';
+
+  activeTab: string = 'profile';
+  emailConfig = { email: '', pass: '' };
 
   constructor(private userService: UserService) {}
 
@@ -24,7 +27,7 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-  salvar() {
+  save() {
     if (this.user.id === 0) {
       this.userService.create(this.user).subscribe(result => {
         this.user = result; // Atualiza com ID retornado
@@ -40,35 +43,47 @@ export class UserProfileComponent implements OnInit {
   private createEmptyUser(): User {
     return {
       id: 0,
-      nome: '',
-      sobrenome: '',
+      name: '',
+      lastName: '',
       email: '',
-      endereco: '',
-      sobre: '',
-      dataNascimento: '',
-      curriculoPath: ''
+      address: '',
+      about: '',
+      dateOfBirth: '',
+      cvPath: ''
     };
   }
 
   onFileSelected(event: any) {
-    this.curriculoFile = event.target.files[0];
+    this.file = event.target.files[0];
   }
 
-  uploadCurriculo(userId: number) {
-    if (!this.curriculoFile) return;
+  uploadCV(userId: number) {
+    if (!this.file) return;
 
     const formData = new FormData();
-    formData.append('file', this.curriculoFile);
+    formData.append('file', this.file);
 
-    this.userService.uploadCurriculo(userId, this.curriculoFile)
+    this.userService.uploadCV(userId, this.file)
     .subscribe({
       next: res => {
-        this.curriculoPath = res.path;
+        this.path = res.path;
         alert('Currículo enviado com sucesso!');
       },
       error: err => {
         console.error(err);
         alert('Erro ao enviar currículo.');
+      }
+    });
+  }
+
+  saveEmailCredential() {
+    this.userService.saveEmailCredential(this.user.id, this.emailConfig.email, this.emailConfig.pass).subscribe({
+      next: () => {
+        alert('Configuração de email salva com sucesso!');
+      },
+      error: (err: any) => {
+        console.error(err);
+        alert('Erro ao salvar configuração de email.');
       }
     });
   }

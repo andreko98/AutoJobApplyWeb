@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment';
 export class JobService {
   private baseUrl = environment.apiUrl;
   private apiUrl = `${this.baseUrl}/jobs`;
+  private recentJobsCount = 10;
 
   constructor(private http: HttpClient) {}
 
@@ -15,8 +16,12 @@ export class JobService {
     return this.http.get<Job[]>(this.apiUrl);
   }
 
-  scrape(term: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/scrape?termo=${term}`, {});
+  scrapeJobs(search: string): Observable<{ total: number }> {
+    return this.http.post<{ total: number }>(`${this.apiUrl}/scrape/${search}`, {});
+  }
+
+  getRecentJobs(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/jobs/recent/${this.recentJobsCount}`);
   }
 }
 

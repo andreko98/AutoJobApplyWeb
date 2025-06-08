@@ -1,0 +1,6 @@
+<div class="job-search">
+  <input [(ngModel)]="searchTerm" placeholder="Buscar vagas..." />
+  <button (click)="searchJobs()" [disabled]="loading">
+    {{ loading ? 'Buscando...' : 'Buscar' }}
+  </button>
+</div>

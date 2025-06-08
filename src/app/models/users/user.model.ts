@@ -1,10 +1,10 @@
 export interface User {
   id: number;
   email: string;
-  nome: string;
-  sobrenome: string;
-  dataNascimento: string; // ou Date
-  endereco: string;
-  sobre: string;
-  curriculoPath: string;
+  name: string;
+  lastName: string;
+  dateOfBirth: string;
+  address: string;
+  about: string;
+  cvPath: string;
 }

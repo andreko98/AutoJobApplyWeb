@@ -1,1 +1,24 @@
-<p>home works!</p>
+<div class="home-dashboard">
+  <h2>Bem-vindo ao Auto Job Apply!</h2>
+  <p>Gerencie suas vagas e aplicações de forma fácil e rápida.</p>
+
+  <div class="dashboard-section">
+    <h3>Vagas Mais Recentes</h3>
+    <ul>
+      <li *ngFor="let job of recentJobs">
+        <strong>{{ job.title }}</strong> - {{ job.company }} ({{ job.location }})
+      </li>
+      <li *ngIf="recentJobs.length === 0">Nenhuma vaga recente encontrada.</li>
+    </ul>
+  </div>
+
+  <div class="dashboard-section">
+    <h3>Últimas Vagas Aplicadas</h3>
+    <ul>
+      <li *ngFor="let app of recentApplications">
+        <strong>{{ app.jobTitle }}</strong> - {{ app.company }} ({{ app.date | date:'shortDate' }})
+      </li>
+      <li *ngIf="recentApplications.length === 0">Nenhuma aplicação recente encontrada.</li>
+    </ul>
+  </div>
+</div>

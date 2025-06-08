@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment';
 export class ApplicationService {
   private baseUrl = environment.apiUrl;
   private apiUrl = `${this.baseUrl}/applications`;
+  private recentApplicationsCount = 10;
 
   constructor(private http: HttpClient) {}
 
@@ -17,5 +18,9 @@ export class ApplicationService {
 
   getByUser(userId: number): Observable<Application[]> {
     return this.http.get<Application[]>(`${this.apiUrl}/user/${userId}`);
+  }
+
+  getRecentApplications(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/applications/recent/${this.recentApplicationsCount}`);
   }
 }

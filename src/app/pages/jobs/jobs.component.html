@@ -1,3 +1,4 @@
+<app-job-search (searchCompleted)="onSearchCompleted($event)"></app-job-search>
 <div *ngFor="let job of jobs" class="job-card">
   <h3>{{ job.title }}</h3>
   <p>{{ job.company }} - {{ job.location }}</p>
