@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { JobService } from '../../services/jobs/job.service';
 import { ApplicationService } from '../../services/applications/application.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.scss'],
+  standalone: true,
+  imports: [CommonModule]
 })
 export class HomeComponent implements OnInit {
   recentJobs: any[] = [];

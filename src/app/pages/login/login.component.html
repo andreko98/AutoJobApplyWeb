@@ -1,16 +1,13 @@
-<div class="login-container">
-  <h2>Login</h2>
-
-  <form [formGroup]="loginForm" (ngSubmit)="login()">
-    <label for="email">E-mail:</label>
-    <input id="email" type="email" formControlName="email" required />
-    <button type="submit" [disabled]="loginForm.invalid">Entrar</button>
-  </form>
-
-  <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
-
-  <hr />
-
-  <p>Não tem conta?</p>
-  <button (click)="irParaCadastro()">Cadastrar-se</button>
-</div>
+<form [formGroup]="loginForm" (ngSubmit)="login()">
+  <input type="email" formControlName="email" placeholder="E-mail" required />
+  <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" style="color:orange">
+    Digite um e-mail válido.
+  </div>
+  <input type="password" formControlName="senha" placeholder="Senha" required />
+  <div *ngIf="loginForm.get('senha')?.invalid && loginForm.get('senha')?.touched" style="color:orange">
+    A senha deve ter pelo menos 8 caracteres, incluindo letra maiúscula, minúscula, número e caractere especial.
+  </div>
+  <button type="submit" [disabled]="loginForm.invalid">Entrar</button>
+  <button type="button" (click)="goToRegister()">Cadastrar-se</button>
+  <div *ngIf="errorMessage" style="color:red">{{ errorMessage }}</div>
+</form>

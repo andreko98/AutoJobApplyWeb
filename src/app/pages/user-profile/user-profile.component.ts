@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { User } from '../../models/users/user.model';
 import { UserService } from '../../services/users/user.service';
 
 @Component({
   selector: 'app-user-profile',
-  templateUrl: './user-profile.component.html'
+  templateUrl: './user-profile.component.html',
+  styleUrls: ['./user-profile.component.scss'],
+  standalone: true,
+  imports: [CommonModule]
 })
 export class UserProfileComponent implements OnInit {
   user: User = this.createEmptyUser();

@@ -1,11 +1,15 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
-  templateUrl: './login.component.html'
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule]
 })
 export class LoginComponent {
   loginForm: FormGroup;
@@ -17,23 +21,36 @@ export class LoginComponent {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]]
+      email: ['', [Validators.required, Validators.email]],
+      senha: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-={}\\[\\]:;"\'<>,.?/~`]).+$')
+        ]
+      ]
     });
   }
 
-  irParaCadastro() {
+  goToRegister() {
     this.router.navigate(['/user-profile']);
   }
 
   login() {
-    const email = this.loginForm.value.email;
+    const { email, pass } = this.loginForm.value;
 
-    this.authService.login(email).subscribe(user => {
-      if (user) {
-        localStorage.setItem('user', JSON.stringify(user));
+    this.errorMessage = '';
+    this.authService.login(email, pass).subscribe({
+      next: user => {
         this.router.navigate(['/']);
-      } else {
-        this.errorMessage = 'Usuário não encontrado. Cadastre-se.';
+      },
+      error: err => {
+        if (err.status === 404) {
+          this.errorMessage = 'Usuário não encontrado. Cadastre-se.';
+        } else {
+          this.errorMessage = 'Erro ao fazer login. Tente novamente.';
+        }
       }
     });
   }

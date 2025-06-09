@@ -1,11 +1,14 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { JobService } from '../../services/jobs/job.service';
 
 @Component({
   selector: 'app-job-search',
   templateUrl: './job-search.component.html',
-  styleUrls: ['./job-search.component.css']
+  styleUrls: ['./job-search.component.scss'],
+  standalone: true,
+  imports: [CommonModule]
 })
 export class JobSearchComponent {
   searchTerm = '';
