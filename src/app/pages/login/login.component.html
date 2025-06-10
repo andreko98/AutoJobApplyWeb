@@ -1,13 +1,24 @@
-<form [formGroup]="loginForm" (ngSubmit)="login()">
-  <input type="email" formControlName="email" placeholder="E-mail" required />
-  <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" style="color:orange">
-    Digite um e-mail válido.
+<div class="login-container">
+  <div class="login-card">
+    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Login" class="login-avatar" />
+    <h2>Bem-vindo!</h2>
+    <p class="subtitle">Acesse sua conta para continuar</p>
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+      <div class="form-row">
+        <input type="email" formControlName="email" placeholder="E-mail" autocomplete="email" email required />
+        <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="warn">
+          Digite um e-mail válido.
+        </div>
+      </div>
+      <div class="form-row">
+        <input type="password" formControlName="pass" placeholder="Senha" required />
+        <div *ngIf="loginForm.get('pass')?.invalid && loginForm.get('pass')?.touched" class="warn">
+          A senha deve ter pelo menos 8 caracteres, incluindo letra maiúscula, minúscula, número e caractere especial.
+        </div>
+      </div>
+      <button class="submit-btn" type="submit" [disabled]="loginForm.invalid">Entrar</button>
+      <button class="secondary-btn" type="button" (click)="goToRegister()">Cadastrar-se</button>
+      <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+    </form>
   </div>
-  <input type="password" formControlName="senha" placeholder="Senha" required />
-  <div *ngIf="loginForm.get('senha')?.invalid && loginForm.get('senha')?.touched" style="color:orange">
-    A senha deve ter pelo menos 8 caracteres, incluindo letra maiúscula, minúscula, número e caractere especial.
-  </div>
-  <button type="submit" [disabled]="loginForm.invalid">Entrar</button>
-  <button type="button" (click)="goToRegister()">Cadastrar-se</button>
-  <div *ngIf="errorMessage" style="color:red">{{ errorMessage }}</div>
-</form>
+</div>

@@ -1,9 +1,10 @@
 <nav *ngIf="isLoggedIn" class="top-bar">
   <span class="logo">Auto Job Apply</span>
   <ul class="nav-links">
-    <li><a routerLink="/jobs">Vagas</a></li>
-    <li><a routerLink="/applications">Histórico</a></li>
-    <li><a routerLink="/user-profile">Meu Perfil</a></li>
+    <li><a (click)="navigate('')">Dashboard</a></li>
+    <li><a (click)="navigate('jobs')">Vagas</a></li>
+    <li><a (click)="navigate('applications')">Histórico</a></li>
+    <li><a (click)="navigate('profile')">Meu Perfil</a></li>
     <li><a (click)="logout()">Sair</a></li>
   </ul>
 </nav>

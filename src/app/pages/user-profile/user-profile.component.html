@@ -1,60 +1,130 @@
-<div>
+<div class="profile-container">
+  <button class="back-btn" type="button" (click)="goBack()" *ngIf="user.id === 0">
+    &#8592; Voltar
+  </button>
+
   <ul class="tabs">
-    <li [class.active]="activeTab === 'profile'" (click)="activeTab = 'profile'">Perfil</li>
-    <li
-      *ngIf="user.id !== 0"
-      [class.active]="activeTab === 'credential'"
-      (click)="activeTab = 'credential'"
-    >
+    <li [class.active]="activeTab === 0" (click)="activeTab = 0">Perfil</li>
+    <li *ngIf="user.id !== 0"
+        [class.active]="activeTab === 1"
+        (click)="activeTab = 1">
       Configurar E-mail de Envio
     </li>
   </ul>
-</div>
 
-<div *ngIf="activeTab === 'profile'">
-  <h2>{{ user.id === 0 ? 'Cadastrar Perfil' : 'Editar Perfil' }}</h2>
-  <form (ngSubmit)="save()" #form="ngForm">
-      <label>Nome</label>
-      <input [(ngModel)]="user.name" name="name" required />
-
-      <label>Sobrenome</label>
-      <input [(ngModel)]="user.lastName" name="lastName" required />
-
-      <label>Email</label>
-      <input [(ngModel)]="user.email" name="email" type="email" required />
-
-      <label>Data de nascimento</label>
-      <input [(ngModel)]="user.dateOfBirth" name="dateOfBirth" type="date" required />
-
-      <label>Endereço</label>
-      <input [(ngModel)]="user.address" name="address" required />
-
-      <label>Sobre</label>
-      <textarea [(ngModel)]="user.about" name="about"></textarea>
-
-      <div>
-          <label for="cv">Currículo (PDF):</label>
-          <input type="file" (change)="onFileSelected($event)" accept="application/pdf" />
-          <button (click)="uploadCV(user.id)" [disabled]="!file">Enviar Currículo</button>
-
-          <div *ngIf="path">
-              <p><strong>Currículo enviado:</strong> {{ path }}</p>
-          </div>
+  <div *ngIf="activeTab === 0" class="profile-form">
+    <h2>
+      {{ user.id === 0 ? 'Cadastrar Perfil' : 'Editar Perfil' }}
+    </h2>
+    <div *ngIf="user.id === 0" class="welcome-message">
+      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Bem-vindo" class="welcome-avatar" />
+      <h3>Bem-vindo!</h3>
+      <p>Preencha seus dados para começar a usar a plataforma.</p>
+    </div>
+    <form (ngSubmit)="save()" #form="ngForm">
+      <div class="form-row">
+        <label>Nome</label>
+        <input [(ngModel)]="user.name" name="name" required #name="ngModel" />
+        <div *ngIf="name.invalid && name.touched" class="warn">Nome é obrigatório.</div>
+      </div>
+      <div class="form-row">
+        <label>Sobrenome</label>
+        <input [(ngModel)]="user.lastName" name="lastName" required #lastName="ngModel" />
+        <div *ngIf="lastName.invalid && lastName.touched" class="warn">Sobrenome é obrigatório.</div>
+      </div>
+      <div class="form-row">
+        <label>Email</label>
+        <input [(ngModel)]="user.email" name="email" type="email" required #email="ngModel" />
+        <div *ngIf="email.invalid && email.touched" class="warn">
+          <span *ngIf="email.errors?.['required']">E-mail é obrigatório.</span>
+          <span *ngIf="email.errors?.['email']">E-mail inválido.</span>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Senha</label>
+        <input
+          [(ngModel)]="user.password"
+          name="profilePassword"
+          type="password"
+          pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$"
+          #profilePassword="ngModel"
+        />
+        <div *ngIf="profilePassword.invalid && profilePassword.touched" class="warn">
+          <span *ngIf="profilePassword.errors?.['pattern']">
+            A senha deve ter pelo menos 8 caracteres, incluindo letra maiúscula, minúscula, número e caractere especial.
+          </span>
+        </div>
+        <span *ngIf="user.id !== 0">Preencha somente se quiser alterar a senha.</span>
+      </div>
+      <div class="form-row">
+        <label>Data de nascimento</label>
+        <input [(ngModel)]="user.dateOfBirth" name="dateOfBirth" type="date" required #dateOfBirth="ngModel" (blur)="validateBirthDate()" />
+        <div *ngIf="dateOfBirth.invalid && dateOfBirth.touched" class="warn">Data de nascimento é obrigatória.</div>
+        <div *ngIf="birthDateInvalid" class="warn">Data de nascimento inválida.</div>
+      </div>
+      <div class="form-row">
+        <label>Endereço</label>
+        <input [(ngModel)]="user.address" name="address" required #address="ngModel" />
+        <div *ngIf="address.invalid && address.touched" class="warn">Endereço é obrigatório.</div>
+      </div>
+      <div class="form-row">
+        <label>Sobre</label>
+        <textarea [(ngModel)]="user.about" name="about" rows="5" required #about="ngModel"></textarea>
+        <div *ngIf="about.invalid && about.touched" class="warn">Campo obrigatório.</div>
       </div>
 
-      <button type="submit">{{ user.id === 0 ? 'Cadastrar' : 'Atualizar' }}</button>
-  </form>
-</div>
+      <button class="submit-btn" type="submit" [disabled]="form.invalid || birthDateInvalid">
+        {{ user.id === 0 ? 'Cadastrar' : 'Atualizar' }}
+      </button>
+    </form>
 
-<div *ngIf="activeTab === 'credential' && user.id !== 0">
-  <h2>Configurar E-mail de Envio</h2>
-  <form (ngSubmit)="saveEmailConfig()" #emailForm="ngForm">
-    <label>E-mail de envio</label>
-    <input [(ngModel)]="emailConfig.email" name="credentialEmail" type="email" required />
+    <div *ngIf="user.id !== 0 && activeTab === 0" class="cv-upload-step">
+      <div class="cv-upload-message">
+        <strong>{{ user.id !== 0 && user.about ? 'Atualize seu currículo se desejar:' : 'Cadastro realizado! Agora envie seu currículo em PDF:' }}</strong>
+      </div>
+      <div class="form-row">
+        <label for="cv">Currículo (PDF):</label>
+        <input type="file" (change)="onFileSelected($event)" accept="application/pdf" />
+        <button type="button" (click)="uploadCV(user.id)" [disabled]="!file">Enviar Currículo</button>
+        <div *ngIf="path" class="cv-path">
+          <p><strong>Currículo enviado:</strong> {{ path }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <label>Senha do e-mail</label>
-    <input [(ngModel)]="emailConfig.pass" name="credentialPass" type="password" required />
-
-    <button type="submit">Salvar Configuração</button>
-  </form>
+  <div *ngIf="user.id !== 0 && activeTab === 1" class="credential-form">
+    <h2>Configurar E-mail de Envio</h2>
+    <form (ngSubmit)="saveEmailCredential()" #emailForm="ngForm">
+      <div class="form-row">
+        <label>E-mail de envio</label>
+        <input
+          [(ngModel)]="emailConfig.email"
+          name="credentialEmail"
+          type="email"
+          required
+          #credentialEmail="ngModel"
+        />
+        <div *ngIf="credentialEmail.invalid && credentialEmail.touched" class="warn">
+          <span *ngIf="credentialEmail.errors?.['required']">E-mail é obrigatório.</span>
+          <span *ngIf="credentialEmail.errors?.['email']">E-mail inválido.</span>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Senha do e-mail</label>
+        <input
+          [(ngModel)]="emailConfig.pass"
+          name="credentialPass"
+          type="password"
+          required
+          #credentialPass="ngModel"
+        />
+        <div *ngIf="credentialPass.invalid && credentialPass.touched" class="warn">
+          <span *ngIf="credentialPass.errors?.['required']">Senha é obrigatória.</span>
+        </div>
+        <span>Preencha somente se quiser alterar a senha.</span>
+      </div>
+      <button class="submit-btn" type="submit" [disabled]="emailForm.invalid">Salvar Configuração</button>
+    </form>
+  </div>
 </div>

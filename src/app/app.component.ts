@@ -15,17 +15,15 @@ export class AppComponent {
 
   constructor(private router: Router) {
     // Simples verificação inicial (pode ser JWT, localStorage, etc.)
-    const user = localStorage.getItem('user');
+    const user = localStorage.getItem('userId');
     this.isAuthenticated = !!user;
 
     if (!this.isAuthenticated) {
       this.router.navigate(['/login']);
     }
-  }
 
-  logout() {
-    localStorage.removeItem('user');
-    this.isAuthenticated = false;
-    this.router.navigate(['/login']);
+    if (this.router.url === '/login') {
+      this.router.navigate(['/']);
+    }
   }
 }

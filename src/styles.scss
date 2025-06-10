@@ -33,3 +33,19 @@
   border-bottom: 2px solid #007bff;
   font-weight: bold;
 }
+
+button, a {
+  cursor: pointer;
+}
+
+.warn {
+  color: orange;
+  font-size: 0.9em;
+  margin-top: 2px;
+}
+
+.error {
+  color: red;
+  margin-top: 12px;
+  font-size: 1em;
+}

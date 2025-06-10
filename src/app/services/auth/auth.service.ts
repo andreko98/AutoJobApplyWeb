@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { User } from '../../models/users/user.model';
+import { UserService } from '../users/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -9,13 +11,18 @@ export class AuthService {
   private baseUrl = environment.apiUrl;
   private apiUrl = `${this.baseUrl}/auth`;
 
-  constructor(private http: HttpClient) {}
+  public user: User | null = null;
 
-  login(email: string, senha: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/login`, { email, senha }, { headers: { 'Content-Type': 'application/json' } }).pipe(
+  constructor(private http: HttpClient, protected userService: UserService) {}
+
+  login(email: string, pass: string): Observable<any> {
+    const body = { email: email, password: pass };
+
+    return this.http.post<any>(`${this.apiUrl}/login`, JSON.stringify(body), { headers: { 'Content-Type': 'application/json' } }).pipe(
       tap(user => {
         if (user && user.id) {
           localStorage.setItem(this.USER_KEY, user.id.toString());
+          this.user = user;
         }
       })
     );
@@ -26,11 +33,22 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
+    if (this.user == null) {
+      let userId = this.getUserId();
+      if (userId === null) {
+        return false;
+      }
+
+      this.userService.getById(userId || 0).subscribe(response => {
+        this.user = response;
+      });
+    }
+
     return localStorage.getItem(this.USER_KEY) !== null;
   }
 
-  getUserId(): number | null {
+  getUserId(): number {
     const id = localStorage.getItem(this.USER_KEY);
-    return id ? Number(id) : null;
+    return id ? Number(id) : 0;
   }
 }

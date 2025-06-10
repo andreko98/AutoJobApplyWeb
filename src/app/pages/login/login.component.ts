@@ -20,9 +20,14 @@ export class LoginComponent {
     private authService: AuthService,
     private router: Router
   ) {
+    // Redireciona para a página inicial se já estiver logado
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/']);
+    }
+
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      senha: [
+      pass: [
         '',
         [
           Validators.required,
@@ -34,7 +39,7 @@ export class LoginComponent {
   }
 
   goToRegister() {
-    this.router.navigate(['/user-profile']);
+    this.router.navigate(['/profile']);
   }
 
   login() {

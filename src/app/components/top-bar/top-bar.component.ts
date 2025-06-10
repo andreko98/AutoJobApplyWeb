@@ -17,6 +17,10 @@ export class TopBarComponent {
     return this.auth.isLoggedIn();
   }
 
+  navigate(pathName: string) {
+    this.router.navigate([`/${pathName}`]);
+  }
+
   logout() {
     this.auth.logout();
     this.router.navigate(['/login']);
