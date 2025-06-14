@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class JobService {
   private baseUrl = environment.apiUrl;
-  private apiUrl = `${this.baseUrl}/jobs`;
+  private apiUrl = `${this.baseUrl}/Jobs`;
   private recentJobsCount = 10;
 
   constructor(private http: HttpClient) {}
@@ -17,11 +17,11 @@ export class JobService {
   }
 
   scrapeJobs(search: string): Observable<{ total: number }> {
-    return this.http.post<{ total: number }>(`${this.apiUrl}/scrape/${search}`, {});
+    return this.http.post<{ total: number }>(`${this.apiUrl}/Scrape/${search}`, {});
   }
 
   getRecentJobs(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/jobs/recent/${this.recentJobsCount}`);
+    return this.http.get<any[]>(`${this.apiUrl}/Recent/${this.recentJobsCount}`);
   }
 }
 

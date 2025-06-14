@@ -21,7 +21,7 @@
       <h3>Bem-vindo!</h3>
       <p>Preencha seus dados para começar a usar a plataforma.</p>
     </div>
-    <form (ngSubmit)="save()" #form="ngForm">
+    <form (ngSubmit)="save()" #profileForm="ngForm">
       <div class="form-row">
         <label>Nome</label>
         <input [(ngModel)]="user.name" name="name" required #name="ngModel" />
@@ -48,6 +48,7 @@
           type="password"
           pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$"
           #profilePassword="ngModel"
+          autocomplete="new-password"
         />
         <div *ngIf="profilePassword.invalid && profilePassword.touched" class="warn">
           <span *ngIf="profilePassword.errors?.['pattern']">
@@ -73,7 +74,7 @@
         <div *ngIf="about.invalid && about.touched" class="warn">Campo obrigatório.</div>
       </div>
 
-      <button class="submit-btn" type="submit" [disabled]="form.invalid || birthDateInvalid">
+      <button class="submit-btn" type="submit" [disabled]="profileForm.invalid || birthDateInvalid">
         {{ user.id === 0 ? 'Cadastrar' : 'Atualizar' }}
       </button>
     </form>
@@ -95,7 +96,7 @@
 
   <div *ngIf="user.id !== 0 && activeTab === 1" class="credential-form">
     <h2>Configurar E-mail de Envio</h2>
-    <form (ngSubmit)="saveEmailCredential()" #emailForm="ngForm">
+    <form (ngSubmit)="saveEmailCredential()" #credentialForm="ngForm">
       <div class="form-row">
         <label>E-mail de envio</label>
         <input
@@ -118,13 +119,14 @@
           type="password"
           required
           #credentialPass="ngModel"
+          autocomplete="new-password"
         />
         <div *ngIf="credentialPass.invalid && credentialPass.touched" class="warn">
           <span *ngIf="credentialPass.errors?.['required']">Senha é obrigatória.</span>
         </div>
         <span>Preencha somente se quiser alterar a senha.</span>
       </div>
-      <button class="submit-btn" type="submit" [disabled]="emailForm.invalid">Salvar Configuração</button>
+      <button class="submit-btn" type="submit" [disabled]="credentialForm.invalid">Salvar Configuração</button>
     </form>
   </div>
 </div>

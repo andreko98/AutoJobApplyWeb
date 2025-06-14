@@ -57,13 +57,6 @@ export class UserService {
       password: pass
     };
 
-    return this.http.post(`${environment.apiUrl}/SaveEmailCredential`, request, this.options)
-    .subscribe({
-      next: () => alert('Configuração de e-mail salva com sucesso!'),
-      error: err => {
-        console.error(err);
-        alert('Erro ao salvar configuração de e-mail.');
-      }
-    });
+    return this.http.post(`${this.apiUrl}/SaveEmailCredential`, request, this.options);
   }
 }

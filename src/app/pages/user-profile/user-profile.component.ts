@@ -15,7 +15,7 @@ import { AuthService } from '../../services/auth/auth.service';
 })
 export class UserProfileComponent implements OnInit {
   user: User = this.createEmptyUser();
-  userId?: number;
+  userId: number = 0;
   file: File | null = null;
   path: string = '';
 
@@ -27,7 +27,7 @@ export class UserProfileComponent implements OnInit {
   constructor(private userService: UserService, private location: Location, protected authService: AuthService) {}
 
   ngOnInit() {
-    this.userId = this.authService.getUserId();
+    this.userId = this.authService.getUserId() ?? 0;
 
     if (this.userId != 0) {
       this.userService.getById(this.userId).subscribe({
@@ -112,13 +112,13 @@ export class UserProfileComponent implements OnInit {
   }
 
   saveEmailCredential() {
-    this.userService.saveEmailCredential(this.user.id, this.emailConfig.email, this.emailConfig.pass).subscribe({
-      next: () => {
-        alert('Configuração de email salva com sucesso!');
+    this.userService.saveEmailCredential(this.userId, this.emailConfig.email, this.emailConfig.pass).subscribe({
+      next: (r: any) => {
+        alert("Credenciais de email salvas com sucesso!");
       },
       error: (err: any) => {
         console.error(err);
-        alert('Erro ao salvar configuração de email.');
+        alert(err.message);
       }
     });
   }
